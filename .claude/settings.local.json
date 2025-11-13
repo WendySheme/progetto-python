@@ -5,7 +5,11 @@
       "Bash(pip install:*)",
       "Bash(.venv/bin/python:*)",
       "Bash(.venv/bin/pip install:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(py main.py:*)",
+      "Bash(py -m pip install:*)",
+      "Bash(del:*)",
+      "Bash(dir:*)"
     ],
     "deny": [],
     "ask": []

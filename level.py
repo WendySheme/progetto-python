@@ -46,18 +46,32 @@ class Level:
         for enemy in self.enemies:
             enemy.update()
 
+        # Update coins (for animations)
+        for coin in self.coins:
+            coin.update()
+
         # Update boss if exists
         if self.boss:
             self.boss.update(player.rect.x)
 
     def draw(self, screen):
         """Draw all level entities"""
-        # DEBUG: Show red boxes to see platform positions
-        for platform in self.platforms:
-            pygame.draw.rect(screen, (255, 0, 0, 128), platform.rect, 2)  # Red outline
+        # DEBUG: Show red boxes to see platform positions with labels
+        font = pygame.font.Font(None, 16)
+        for i, platform in enumerate(self.platforms):
+            pygame.draw.rect(screen, (255, 0, 0), platform.rect, 2)  # Red outline
+            # Draw platform info (index, x, width)
+            if platform.rect.width > 10:  # Only label visible platforms
+                text = font.render(f"#{i} x:{platform.rect.x} w:{platform.rect.width}", True, (255, 255, 0))
+                screen.blit(text, (platform.rect.x + 2, platform.rect.y - 15))
 
-        # DON'T draw anything else - spikes, coins, enemies stay invisible
-        pass
+        # Draw enemies (cucumber with animations)
+        self.enemies.draw(screen)
+
+        # Draw coins (diamond with animations)
+        self.coins.draw(screen)
+
+        # Spikes are invisible hazards (no drawing needed)
 
     def load_level_1(self):
         """Level 1 layout - aligned with centered demo.png background"""
@@ -71,50 +85,38 @@ class Level:
             self.platforms.append(Platform(-50, y, 50))  # Left wall
             # Right wall is added separately below
 
-        # Based on YELLOW lines in screenshot - where platforms SHOULD be
         # Bottom left ground platform (lowest visible platform on left)
-        self.platforms.append(Platform(0, 530, 250))
+        self.platforms.append(Platform(40, 540, 350))
 
         # Lower middle platforms (around the small stone platforms)
-        self.platforms.append(Platform(300, 450, 120))
-        self.platforms.append(Platform(450, 415, 100))
+        self.platforms.append(Platform(345, 510, 40))
 
-        # Middle-right platform (with tree)
-        self.platforms.append(Platform(550, 385, 100))
+        #piattaforme centrali
+        self.platforms.append(Platform(400, 480, 40))
 
-        # Right side platforms (stone platforms going up)
-        self.platforms.append(Platform(650, 350, 120))
-        self.platforms.append(Platform(750, 325, 50))  # Small platform
+        self.platforms.append(Platform(455, 450, 30))
+ 
+        self.platforms.append(Platform(476, 410, 30))
+        
+        self.platforms.append(Platform(600, 410, 150))  # Small platform
 
         # Right wall - ONLY at bottom, next to chest area
         for y in range(500, SCREEN_HEIGHT, 20):
-            self.platforms.append(Platform(SCREEN_WIDTH, y, 50))  # Right wall partial
+            self.platforms.append(Platform(SCREEN_WIDTH, y, 0))  # Right wall partial
 
-        # Top horizontal platforms (if visible at top of screen)
-        self.platforms.append(Platform(80, 100, 180))
-        self.platforms.append(Platform(280, 100, 200))
 
-        # Add slime enemies on various platforms - TEMPORARILY DISABLED FOR DEBUGGING
-        # self.enemies.add(Enemy(50, 465, 60))  # Bottom left
-        # self.enemies.add(Enemy(370, 415, 60))  # Lower middle
-        # self.enemies.add(Enemy(470, 340, 60))  # Upper middle with tree
-        # self.enemies.add(Enemy(690, 325, 60))  # Right platform
+        # cucumber enemies 
+        self.enemies.add(Enemy(150, 485, 80, enemy_type='cucumber'))  # First platform - patrols left side
+        self.enemies.add(Enemy(460, 355, 50, enemy_type='cucumber'))  # Small platform with tree
+       
 
         # Add coins scattered across platforms
         self.coins.add(Coin(80, 440))
         self.coins.add(Coin(325, 430))
         self.coins.add(Coin(410, 400))
-        self.coins.add(Coin(610, 385))
-        self.coins.add(Coin(700, 340))
-        self.coins.add(Coin(130, 105))  # Top platform
+       # Top platform
 
-        # Add spikes on platforms (where spike graphics appear in background)
-        self.spikes.add(Spike(365, 423))  # On lower middle platform
-        self.spikes.add(Spike(385, 423))  # Multiple spikes
-        self.spikes.add(Spike(405, 423))
-        self.spikes.add(Spike(640, 378))  # Right side spikes
-        self.spikes.add(Spike(660, 378))
-        self.spikes.add(Spike(680, 378))
+        
 
     def load_level_2(self):
         """Level 2 layout - more challenging"""

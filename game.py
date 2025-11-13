@@ -89,7 +89,16 @@ class Game:
         coins_collected = pygame.sprite.spritecollide(self.player, self.level.coins, True)
         for coin in coins_collected:
             self.score += POINTS_PER_COIN
-        
+
+        # Check spike collision (new enemy hazards)
+        spikes_hit = pygame.sprite.spritecollide(self.player, self.level.spikes, False)
+        if spikes_hit:
+            if self.player.take_damage():
+                if self.player.lives <= 0:
+                    self.game_over = True
+                else:
+                    self.player.reset_position(100, SCREEN_HEIGHT - 150)
+
         # Check enemy collision
         enemies_hit = pygame.sprite.spritecollide(self.player, self.level.enemies, False)
         for enemy in enemies_hit:
@@ -175,8 +184,8 @@ class Game:
             bg = assets.get_background(f'level{self.current_level}')
             if bg:
                 # Center the background (1280x960) on the screen (800x600)
-                # Shift a bit to the left for better alignment
-                bg_x = -(bg.get_width() - SCREEN_WIDTH) // 2 - 50
+                # Apply horizontal offset from config
+                bg_x = -(bg.get_width() - SCREEN_WIDTH) // 2 + BG_HORIZONTAL_OFFSET
                 bg_y = -(bg.get_height() - SCREEN_HEIGHT) // 2
                 self.screen.blit(bg, (bg_x, bg_y))
             else:

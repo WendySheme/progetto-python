@@ -19,8 +19,8 @@ DARK_GRAY = (64, 64, 64)
 LIGHT_BLUE = (100, 149, 237)
 
 # Player settings
-PLAYER_WIDTH = 60
-PLAYER_HEIGHT = 90
+PLAYER_WIDTH = 70
+PLAYER_HEIGHT = 80
 PLAYER_SPEED = 5
 JUMP_STRENGTH = 15
 GRAVITY = 0.8
@@ -48,3 +48,7 @@ POINTS_PER_BOSS = 500
 
 # Level settings
 NUM_LEVELS = 3
+
+# Background settings
+BG_HORIZONTAL_OFFSET = -30  # Positive = shift right, Negative = shift left, 0 = center
+PLATFORM_HORIZONTAL_OFFSET = -5 # Should match BG_HORIZONTAL_OFFSET to keep platforms aligned

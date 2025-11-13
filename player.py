@@ -40,7 +40,7 @@ class Player(pygame.sprite.Sprite):
             self.image.fill(GREEN)
 
         self.rect = self.image.get_rect()
-        self.rect.x = x
+        self.rect.x = x + PLATFORM_HORIZONTAL_OFFSET
         self.rect.y = y
 
         # Animation state
@@ -180,7 +180,7 @@ class Player(pygame.sprite.Sprite):
     
     def reset_position(self, x, y):
         """Reset player to starting position"""
-        self.rect.x = x
+        self.rect.x = x + PLATFORM_HORIZONTAL_OFFSET
         self.rect.y = y
         self.vel_x = 0
         self.vel_y = 0

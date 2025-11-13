@@ -43,6 +43,7 @@ class AssetManager:
         # Try to load animation folders first
         self.load_player_animations(sprites_dir)
         self.load_enemy_animations(sprites_dir)
+        self.load_coin_animations(sprites_dir)
 
         # Load single sprite files
         sprite_files = {
@@ -92,15 +93,18 @@ class AssetManager:
         """Load enemy animation frames from folders"""
         enemy_folders = {
             'enemy_green': 'SlimeGreen',
-            'enemy_orange': 'SlimeOrange'
+            'enemy_orange': 'SlimeOrange',
+            'enemy_cucumber_idle': '3-Enemy-Cucumber/1-Idle',
+            'enemy_cucumber_run': '3-Enemy-Cucumber/2-Run'
         }
 
         for anim_name, folder_name in enemy_folders.items():
             folder_path = os.path.join(sprites_dir, folder_name)
             if os.path.exists(folder_path):
                 frames = []
-                # Load all PNG files in the folder, sorted
-                files = sorted([f for f in os.listdir(folder_path) if f.endswith('.png')])
+                # Load all PNG files in the folder, sorted by number
+                files = sorted([f for f in os.listdir(folder_path) if f.endswith('.png')],
+                             key=lambda x: int(x.split('.')[0]) if x.split('.')[0].isdigit() else 0)
                 for filename in files:
                     filepath = os.path.join(folder_path, filename)
                     try:
@@ -112,6 +116,33 @@ class AssetManager:
                 if frames:
                     self.sprites[anim_name] = frames
                     print(f"Loaded {len(frames)} frames for {anim_name}")
+
+    def load_coin_animations(self, sprites_dir):
+        """Load coin animation frames from sprite sheet"""
+        diamond_path = os.path.join(sprites_dir, 'big diamond idles', 'Big Diamond Idle (18x14).png')
+
+        if os.path.exists(diamond_path):
+            try:
+                sprite_sheet = pygame.image.load(diamond_path).convert_alpha()
+
+                # The sprite sheet has frames of 18x14 pixels arranged horizontally
+                frame_width = 18
+                frame_height = 14
+                sheet_width = sprite_sheet.get_width()
+                num_frames = sheet_width // frame_width
+
+                frames = []
+                for i in range(num_frames):
+                    # Extract each frame from the sprite sheet
+                    frame = pygame.Surface((frame_width, frame_height), pygame.SRCALPHA)
+                    frame.blit(sprite_sheet, (0, 0), (i * frame_width, 0, frame_width, frame_height))
+                    frames.append(frame)
+
+                if frames:
+                    self.sprites['coin_diamond'] = frames
+                    print(f"Loaded {len(frames)} frames for diamond coin animation")
+            except pygame.error as e:
+                print(f"Could not load diamond sprite sheet: {e}")
 
     def load_backgrounds(self):
         """Load background images"""
